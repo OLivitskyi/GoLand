@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 )
@@ -38,7 +37,7 @@ func convertToAsciiArt(text, bannerFilename string) string {
 }
 
 func createMap(filename string) map[rune][]string {
-	fileContent, err := ioutil.ReadFile(filename)
+	fileContent, err := os.ReadFile(filename)
 	if err != nil {
 		fmt.Printf("Error reading file: %v\n", err)
 		os.Exit(1)
@@ -47,8 +46,16 @@ func createMap(filename string) map[rune][]string {
 	bannerLines := strings.Split(string(fileContent), "\n")
 	asciiMap := make(map[rune][]string, 95)
 
+	// Get total number of lines
+	totalLines := len(bannerLines)
+
+	// Calculate number of lines per symbol based on total lines
+	// For thinkertoy without space line, number of lines would be 9
+	// For standard.txt and shadow.txt that use space line, number of lines would be 10
+	linesPerSymbol := totalLines / 95
+
 	for char := 32; char <= 126; char++ {
-		startLine := 1 + (char-32)*9
+		startLine := 1 + (int(char)-32)*linesPerSymbol
 		endLine := startLine + 8
 		fullArt := bannerLines[startLine:endLine]
 		asciiMap[rune(char)] = fullArt
@@ -64,7 +71,7 @@ func printArt(lines []string, asciiMap map[rune][]string) string {
 			result += "\n"
 			continue
 		}
-		for row := 0; row < 8; row++ {
+		for row := 0; row < 6; row++ {
 			for _, ch := range word {
 				result += asciiMap[ch][row]
 			}
