@@ -6,13 +6,26 @@ import (
 	"strings"
 )
 
-func main() {
-	text := os.Args[1]
-	resourcesPath := "resources/"
-	bannerFilename := "standard.txt"
+const (
+	resourcesPath           string = "resources/"
+	defaultBannerName              = "standard"
+	argInputText                   = 1
+	argBannerName                  = 2
+	asciiSpace              rune   = 32
+	asciiTilde              rune   = 126
+	asciiSymbolsCount       int    = 95
+	withoutSpacingSeparator        = 9
+	withSpacingSeparator           = 10
+	rowCountPerChar                = 6
+	asciiArtStartOffset            = 1
+)
 
-	if len(os.Args) > 2 {
-		requestedBanner := os.Args[2]
+func main() {
+	text := os.Args[argInputText]
+	bannerFilename := defaultBannerName + ".txt"
+
+	if len(os.Args) > argBannerName {
+		requestedBanner := os.Args[argBannerName]
 		availableBanners := map[string]bool{
 			"standard":   true,
 			"shadow":     true,
@@ -21,7 +34,7 @@ func main() {
 		if availableBanners[requestedBanner] {
 			bannerFilename = requestedBanner + ".txt"
 		} else {
-			fmt.Println("The Banner", requestedBanner, "is not available. Using standard.txt as a default ASCII Art.")
+			fmt.Println("The Banner", requestedBanner, "is not available. Using", defaultBannerName+".txt", "as a default ASCII Art.")
 		}
 	}
 
@@ -44,21 +57,20 @@ func createMap(filename string) map[rune][]string {
 	}
 
 	bannerLines := strings.Split(string(fileContent), "\n")
-	asciiMap := make(map[rune][]string, 95)
+	asciiMap := make(map[rune][]string, asciiSymbolsCount)
 
-	// Get total number of lines
 	totalLines := len(bannerLines)
 
-	// Calculate number of lines per symbol based on total lines
-	// For thinkertoy without space line, number of lines would be 9
-	// For standard.txt and shadow.txt that use space line, number of lines would be 10
-	linesPerSymbol := totalLines / 95
+	linesPerSymbol := withoutSpacingSeparator
+	if (totalLines / asciiSymbolsCount) == withSpacingSeparator {
+		linesPerSymbol = withSpacingSeparator
+	}
 
-	for char := 32; char <= 126; char++ {
-		startLine := 1 + (int(char)-32)*linesPerSymbol
-		endLine := startLine + 8
+	for char := asciiSpace; char <= asciiTilde; char++ {
+		startLine := asciiArtStartOffset + (int(char)-int(asciiSpace))*linesPerSymbol
+		endLine := startLine + rowCountPerChar
 		fullArt := bannerLines[startLine:endLine]
-		asciiMap[rune(char)] = fullArt
+		asciiMap[char] = fullArt
 	}
 
 	return asciiMap
@@ -71,7 +83,7 @@ func printArt(lines []string, asciiMap map[rune][]string) string {
 			result += "\n"
 			continue
 		}
-		for row := 0; row < 6; row++ {
+		for row := 0; row < rowCountPerChar; row++ {
 			for _, ch := range word {
 				result += asciiMap[ch][row]
 			}
