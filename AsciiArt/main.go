@@ -1,24 +1,32 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"strings"
 )
 
 func main() {
-	reader := bufio.NewReader(os.Stdin)
 
-	fmt.Println("Enter text to convert to ASCII Art:")
-	inputText, _ := reader.ReadString('\n')
-	inputText = strings.TrimSuffix(inputText, "\n") // Remove the newline character
+	text := os.Args[1]
+	bannerFilename := "./resources/standard.txt"
 
-	bannerFilename := "/Users/oleg_livitskyi/SandBox/Go/GoLand/AsciiArt/resources/standard.txt" //need to change for local file placement
-	fmt.Println(ConvertToAsciiArt(inputText, bannerFilename))
+	if len(os.Args) > 2 {
+		requestedBanner := os.Args[2]
+		bannerPath := "./resources/" + requestedBanner + ".txt"
+		if _, err := os.Stat(bannerPath); err == nil {
+			bannerFilename = bannerPath
+		} else {
+			fmt.Println("The Banner", requestedBanner, "is not found. Using standard.txt as a default ASCII Art.")
+		}
+	}
+
+	asciiArt := convertToAsciiArt(text, bannerFilename)
+	fmt.Println(asciiArt)
 }
 
-func ConvertToAsciiArt(text, bannerFilename string) string {
+func convertToAsciiArt(text, bannerFilename string) string {
 	asciiMap := createMap(bannerFilename)
 	lines := strings.Split(text, "\n")
 	art := printArt(lines, asciiMap)
@@ -26,17 +34,17 @@ func ConvertToAsciiArt(text, bannerFilename string) string {
 }
 
 func createMap(filename string) map[rune][]string {
-	fileContent, err := os.ReadFile(filename)
+	fileContent, err := ioutil.ReadFile(filename)
 	if err != nil {
 		fmt.Printf("Error reading file: %v\n", err)
 		os.Exit(1)
 	}
 
 	bannerLines := strings.Split(string(fileContent), "\n")
-	asciiMap := make(map[rune][]string)
+	asciiMap := make(map[rune][]string, 95)
 
 	for char := 32; char <= 126; char++ {
-		startLine := 1 + (int(char)-32)*9
+		startLine := 1 + (char-32)*9
 		endLine := startLine + 8
 		fullArt := bannerLines[startLine:endLine]
 		asciiMap[rune(char)] = fullArt
