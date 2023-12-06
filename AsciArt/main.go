@@ -14,7 +14,7 @@ func main() {
 	inputText, _ := reader.ReadString('\n')
 	inputText = strings.TrimSuffix(inputText, "\n") // Remove the newline character
 
-	bannerFilename := "/Users/oleg_livitskyi/SandBox/Go/GoLand/AsciArt/resources/standard.txt"
+	bannerFilename := "/Users/oleg_livitskyi/SandBox/Go/GoLand/AsciArt/resources/standard.txt" //need to change for local file placement
 	fmt.Println(ConvertToAsciiArt(inputText, bannerFilename))
 }
 
