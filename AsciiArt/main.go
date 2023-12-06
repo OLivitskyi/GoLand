@@ -8,21 +8,25 @@ import (
 )
 
 func main() {
-
 	text := os.Args[1]
-	bannerFilename := "./resources/standard.txt"
+	resourcesPath := "resources/"
+	bannerFilename := "standard.txt"
 
 	if len(os.Args) > 2 {
 		requestedBanner := os.Args[2]
-		bannerPath := "./resources/" + requestedBanner + ".txt"
-		if _, err := os.Stat(bannerPath); err == nil {
-			bannerFilename = bannerPath
+		availableBanners := map[string]bool{
+			"standard":   true,
+			"shadow":     true,
+			"thinkertoy": true,
+		}
+		if availableBanners[requestedBanner] {
+			bannerFilename = requestedBanner + ".txt"
 		} else {
-			fmt.Println("The Banner", requestedBanner, "is not found. Using standard.txt as a default ASCII Art.")
+			fmt.Println("The Banner", requestedBanner, "is not available. Using standard.txt as a default ASCII Art.")
 		}
 	}
 
-	asciiArt := convertToAsciiArt(text, bannerFilename)
+	asciiArt := convertToAsciiArt(text, resourcesPath+bannerFilename)
 	fmt.Println(asciiArt)
 }
 
