@@ -1,9 +1,12 @@
 package main
 
-import "testing"
+import (
+	_const "github.com/OLivitskyi/AsciiArt/const"
+	"testing"
+)
 
-func TestConvertToAsciiArt(t *testing.T) {
-	got := convertToAsciiArt("A", "resources/standard.txt")
+func TestConvertToAsciiArtWithDefault(t *testing.T) {
+	got := convertToAsciiArt("A", _const.ResourcesPath+"standard.txt")
 	want :=
 		"           \n" +
 			"    /\\     \n" +
@@ -17,7 +20,7 @@ func TestConvertToAsciiArt(t *testing.T) {
 }
 
 func TestConvertToAsciiArtWithThinkertoy(t *testing.T) {
-	got := convertToAsciiArt("A", "resources/thinkertoy.txt")
+	got := convertToAsciiArt("A", _const.ResourcesPath+"thinkertoy.txt")
 	want :=
 		"      \n" +
 			"  O   \n" +
@@ -31,7 +34,7 @@ func TestConvertToAsciiArtWithThinkertoy(t *testing.T) {
 }
 
 func TestConvertToAsciiArtWithShadow(t *testing.T) {
-	got := convertToAsciiArt("A", "resources/shadow.txt")
+	got := convertToAsciiArt("A", _const.ResourcesPath+"shadow.txt")
 	want := "         \n" +
 		"  _|_|   \n" +
 		"_|    _| \n" +
@@ -40,5 +43,14 @@ func TestConvertToAsciiArtWithShadow(t *testing.T) {
 		"_|    _| \n"
 	if got != want {
 		t.Errorf("\ngot  %q\n, want %q", got, want)
+	}
+}
+func TestCreateMap(t *testing.T) {
+	filename := _const.ResourcesPath + "standard.txt"
+	asciiMap := createMap(filename)
+	for char := _const.AsciiSpace; char <= _const.AsciiTilde; char++ {
+		if len(asciiMap[char]) == 0 {
+			t.Fatalf("\ncreateMap() didn't generate a mapping for rune %v", char)
+		}
 	}
 }
