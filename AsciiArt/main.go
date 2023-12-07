@@ -8,6 +8,14 @@ import (
 )
 
 func main() {
+	// Check if at least one argument is present
+	if len(os.Args) <= _const.ArgInputText {
+		fmt.Println("Error: not enough arguments")
+		fmt.Println("Usage: go run main.go [TEXT_TO_PRINT] [OPTIONAL_ASCII_ART_STYLE]")
+		fmt.Println("Available ASCII Art styles: standard, shadow, thinkertoy")
+		return
+	}
+
 	text := os.Args[_const.ArgInputText]
 	bannerFilename := _const.DefaultBannerName + ".txt"
 
