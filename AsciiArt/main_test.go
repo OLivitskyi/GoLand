@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestConvertToAsciiArtWithDefault(t *testing.T) {
+func TestConvertToAsciiArtWithStandard(t *testing.T) {
 	got := convertToAsciiArt("A", _const.ResourcesPath+"standard.txt")
 	want :=
 		"           \n" +
@@ -13,7 +13,9 @@ func TestConvertToAsciiArtWithDefault(t *testing.T) {
 			"   /  \\    \n" +
 			"  / /\\ \\   \n" +
 			" / ____ \\  \n" +
-			"/_/    \\_\\ \n"
+			"/_/    \\_\\ \n" +
+			"           \n" +
+			"           "
 	if got != want {
 		t.Errorf("\ngot  %q\n, want %q", got, want)
 	}
@@ -27,7 +29,9 @@ func TestConvertToAsciiArtWithThinkertoy(t *testing.T) {
 			" / \\  \n" +
 			"o---o \n" +
 			"|   | \n" +
-			"o   o \n"
+			"o   o \n" +
+			"      \n" +
+			"      "
 	if got != want {
 		t.Errorf("\ngot  %q\n, want %q", got, want)
 	}
@@ -35,12 +39,15 @@ func TestConvertToAsciiArtWithThinkertoy(t *testing.T) {
 
 func TestConvertToAsciiArtWithShadow(t *testing.T) {
 	got := convertToAsciiArt("A", _const.ResourcesPath+"shadow.txt")
-	want := "         \n" +
-		"  _|_|   \n" +
-		"_|    _| \n" +
-		"_|_|_|_| \n" +
-		"_|    _| \n" +
-		"_|    _| \n"
+	want :=
+		"         \n" +
+			"  _|_|   \n" +
+			"_|    _| \n" +
+			"_|_|_|_| \n" +
+			"_|    _| \n" +
+			"_|    _| \n" +
+			"         \n" +
+			"         "
 	if got != want {
 		t.Errorf("\ngot  %q\n, want %q", got, want)
 	}

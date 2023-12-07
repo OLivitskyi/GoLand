@@ -10,6 +10,6 @@ const (
 	AsciiSymbolsCount       int    = 95
 	WithoutSpacingSeparator        = 9
 	WithSpacingSeparator           = 10
-	RowCountPerChar                = 6
+	RowCountPerChar                = 8
 	AsciiArtStartOffset            = 1
 )

@@ -38,10 +38,14 @@ func main() {
 }
 
 func convertToAsciiArt(text, bannerFilename string) string {
+	text = strings.Replace(text, "\\n", "\n", -1)
 	asciiMap := createMap(bannerFilename)
 	lines := strings.Split(text, "\n")
-	art := printArt(lines, asciiMap)
-	return art
+	var artLines []string
+	for _, line := range lines {
+		artLines = append(artLines, printArt([]string{line}, asciiMap))
+	}
+	return strings.Join(artLines, "\n")
 }
 
 func createMap(filename string) map[rune][]string {
@@ -73,16 +77,17 @@ func createMap(filename string) map[rune][]string {
 
 func printArt(lines []string, asciiMap map[rune][]string) string {
 	var result string
-	for _, word := range lines {
+	for lineIndex, word := range lines {
 		if word == "" {
-			result += "\n"
 			continue
 		}
 		for row := 0; row < _const.RowCountPerChar; row++ {
 			for _, ch := range word {
 				result += asciiMap[ch][row]
 			}
-			result += "\n"
+			if lineIndex != len(lines)-1 || row != _const.RowCountPerChar-1 {
+				result += "\n"
+			}
 		}
 	}
 	return result
